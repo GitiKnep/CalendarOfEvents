@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          axios.get('https://localhost:7272/api/GitiDateEvent').then((res)=>{
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events:res.data,
+        });
+        var sel=res.data;
+        for(let i=0;i<sel.length;i++){
+          let x=document.createElement('option');
+          x.text=sel[i].title;
+          x.value=sel[i].id;
+          document.getElementById('selectt').appendChild(x);
+        }
+        for(let i=0;i<sel.length;i++){
+          let x=document.createElement('option');
+          x.text=sel[i].title;
+          x.value=sel[i].id;
+          document.getElementById('selectt2').appendChild(x);
+        }
+        calendar.render();}); });
+    function add1()
+      {
+        var t=document.getElementById("addTitel").value;
+        var d=document.getElementById("addDate").value;
+        axios.post("https://localhost:7272/api/GitiDateEvent", {
+                "title":t,
+                "start":d
+            }).then(res => {
+                console.log(res.data)
+               
+            })
+            
+    }
+    function update1()
+      {
+        var t1=document.getElementById("updateTitel").value;
+        var d1=document.getElementById("updateDate").value;
+        var id1=document.getElementById("selectt")[document.getElementById('selectt').selectedIndex].value;
+            axios.put(`https://localhost:7272/api/GitiDateEvent/${id1}`, {
+                "title":t1,
+                "start":d1
+            }).then(res => {
+                console.log(res.data)
+            })
+            
+    }
+        
+  function del1()
+      {
+        var id2=document.getElementById("selectt2")[document.getElementById('selectt2').selectedIndex].value;
+        axios.delete(`https://localhost:7272/api/GitiDateEvent/${id2}`).then(res => {console.log(res.data)})
+        
+    }
+
+    </script>
+  </head>
+  <body>
+    <div id='calendar'></div>
+    <label>Add</label><br></br>
+     <input id="addTitel" placeholder="הוסף כותרת"></input>
+    <input type="date" id="addDate"></input>
+    <button onclick="add1()">add</button><br></br>
+    <label>Update</label><br></br>
+    <select id="selectt"></select>
+    <input id="updateTitel" placeholder="שנה כותרת"></input>
+    <input type="date" id="updateDate"></input>
+    <button onclick="update1()">update</button><br></br>
+    <label>Delete</label><br></br>
+    <select id="selectt2"></select>
+    <button onclick="del1()" >delete event</button>
+    
+  </body>
+</html>
