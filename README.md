@@ -1,3 +1,3 @@
 # ***Calendar Of Events***
 
-  Calendar Of Events based on .NET and JS
+  Calendar Of Events based on .NET , C# and JS
